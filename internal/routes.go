@@ -14,7 +14,7 @@ func InitRoutes(c fiber.Router, db *sql.DB) {
 	activityHandler := handler.NewActivityHandler(activityService)
 
 	todoRepository := repository.NewTodoRepository(db)
-	todoService := service.NewTodoService(todoRepository, activityRepository)
+	todoService := service.NewTodoService(todoRepository)
 	todoHandler := handler.NewTodoHandler(todoService)
 
 	// Activity Routes

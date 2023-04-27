@@ -16,14 +16,12 @@ type TodoServiceContract interface {
 }
 
 type TodoService struct {
-	TodoRepository     repository.TodoRepository
-	ActivityRepository repository.ActivityRepository
+	TodoRepository repository.TodoRepository
 }
 
-func NewTodoService(todoRepository *repository.TodoRepository, activityRepository *repository.ActivityRepository) *TodoService {
+func NewTodoService(todoRepository *repository.TodoRepository) *TodoService {
 	return &TodoService{
-		TodoRepository:     *todoRepository,
-		ActivityRepository: *activityRepository,
+		TodoRepository: *todoRepository,
 	}
 }
 
@@ -36,11 +34,6 @@ func (service *TodoService) FindByID(ctx context.Context, id int) (*model.Todo, 
 }
 
 func (service *TodoService) Create(ctx context.Context, todo *model.Todo) (*model.Todo, error) {
-	_, err := service.ActivityRepository.FindByID(ctx, todo.ActivityGroupID)
-	if err != nil {
-		return nil, err
-	}
-
 	return service.TodoRepository.Create(ctx, todo)
 }
 
@@ -50,10 +43,23 @@ func (service *TodoService) Update(ctx context.Context, todo *model.Todo) (*mode
 		return nil, err
 	}
 
-	todoCheck.Title = todo.Title
-	todoCheck.Priority = todo.Priority
-	todoCheck.IsActive = todo.IsActive
+	if todo.Priority != "" {
+		todoCheck.Priority = todo.Priority
+	}
+
+	oldTitle := todoCheck.Title
+	if todoCheck.Title != todo.Title {
+		todoCheck.Title = todo.Title
+	}
+	if todo.Title == "" {
+		todoCheck.Title = oldTitle
+	}
+
 	todoCheck.UpdatedAt, _ = helper.TimeNow()
+
+	if todoCheck.IsActive != todo.IsActive {
+		todoCheck.IsActive = todo.IsActive
+	}
 
 	err = service.TodoRepository.Update(ctx, todoCheck)
 	if err != nil {

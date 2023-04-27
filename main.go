@@ -3,7 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/arvians-id/go-todo-list/cmd/config"
+	config2 "github.com/arvians-id/go-todo-list/config"
 	"github.com/arvians-id/go-todo-list/internal"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
@@ -13,8 +13,8 @@ import (
 
 func main() {
 	// Init Config
-	configuration := config.New(".env")
-	db, err := config.InitMySQL(configuration)
+	configuration := config2.New(".env")
+	db, err := config2.InitMySQL(configuration)
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -35,7 +35,7 @@ func main() {
 
 	internal.InitRoutes(app, db)
 
-	port := fmt.Sprintf(":%s", configuration.Get("APP_PORT"))
+	port := fmt.Sprintf(":%s", configuration.Get("PORT"))
 	err = app.Listen(port)
 	if err != nil {
 		log.Fatalln("Cannot connect to server", err)

@@ -62,17 +62,17 @@ func (handler *TodoHandler) Create(c *fiber.Ctx) error {
 		todoRequest.Priority = "very-high"
 	}
 
+	if todoRequest.ActivityGroupID == 0 {
+		return response.ReturnError(c, http.StatusBadRequest, "Bad Request", "activity_group_id cannot be null")
+	}
+
 	todo, err := handler.TodoService.Create(c.Context(), &model.Todo{
 		Title:           todoRequest.Title,
 		ActivityGroupID: todoRequest.ActivityGroupID,
-		IsActive:        todoRequest.IsActive,
+		IsActive:        true,
 		Priority:        todoRequest.Priority,
 	})
 	if err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
-			errorString := fmt.Sprintf("Activity with ID %d Not Found", todoRequest.ActivityGroupID)
-			return response.ReturnError(c, http.StatusNotFound, "Not Found", errorString)
-		}
 		return response.ReturnError(c, http.StatusInternalServerError, "Error", err.Error())
 	}
 
@@ -88,10 +88,6 @@ func (handler *TodoHandler) Update(c *fiber.Ctx) error {
 	var todoRequest request.UpdateTodoRequest
 	if err := c.BodyParser(&todoRequest); err != nil {
 		return response.ReturnError(c, http.StatusBadRequest, "Bad Request", err.Error())
-	}
-
-	if todoRequest.Title == "" {
-		return response.ReturnError(c, http.StatusBadRequest, "Bad Request", "title cannot be null")
 	}
 
 	todo, err := handler.TodoService.Update(c.Context(), &model.Todo{

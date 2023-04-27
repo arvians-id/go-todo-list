@@ -65,7 +65,7 @@ func (handler *ActivityHandler) Create(c *fiber.Ctx) error {
 		return response.ReturnError(c, http.StatusInternalServerError, "Error", err.Error())
 	}
 
-	return response.ReturnSuccess(c, http.StatusOK, "Success", "Success", activity)
+	return response.ReturnSuccess(c, http.StatusCreated, "Success", "Success", activity)
 }
 
 func (handler *ActivityHandler) Update(c *fiber.Ctx) error {
