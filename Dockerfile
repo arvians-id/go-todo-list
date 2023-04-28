@@ -11,8 +11,6 @@ RUN go mod download
 
 COPY . .
 
-WORKDIR /app
-
 EXPOSE 3030
 
 CMD ["go", "run", "cmd/server/main.go"]
