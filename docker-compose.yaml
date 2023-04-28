@@ -14,6 +14,19 @@ services:
       - "3306:3306"
     networks:
       - todo
+  backend:
+    container_name: my_todo
+    image: arvians/go-todo-list:latest
+    restart: always
+    environment:
+      - MYSQL_HOST=db
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=root
+      - MYSQL_DBNAME=todo4
+    ports:
+      - "3030:3030"
+    networks:
+        - todo
 
 networks:
   todo:

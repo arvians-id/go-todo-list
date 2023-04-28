@@ -2,4 +2,4 @@ tmp
 .env
 .idea
 .vscode
-./database/mysql-data
+database/mysql-data
