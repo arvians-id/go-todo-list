@@ -1,0 +1,5 @@
+tmp
+.env
+.idea
+.vscode
+./database/mysql-data

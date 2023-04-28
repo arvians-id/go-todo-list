@@ -1,0 +1,20 @@
+version: "3.9"
+
+services:
+  db:
+    container_name: my_db
+    image: mysql:latest
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=todo4
+    volumes:
+      - ./database/mysql-data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      - todo
+
+networks:
+  todo:
+    driver: bridge
