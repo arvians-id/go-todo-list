@@ -12,3 +12,6 @@ run-docker:
 
 run-dev:
 	go run cmd/server/main.go
+
+run-test:
+	docker run --rm -e API_URL=http://host.docker.internal:3030 monsterup/devcode-unit-test-1
